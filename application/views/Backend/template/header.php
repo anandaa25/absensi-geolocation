@@ -41,7 +41,8 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <title>Sistem Informasi Pengaduan Online</title>
+    <title>MrhGroup Absensi</title>
+    <link rel="shortcut icon" href="assets/img/logo.png">
 
 
 </head>

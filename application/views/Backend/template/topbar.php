@@ -16,7 +16,7 @@
 
             <!--Logo-->
             <div class="col-sm-3 pl-0 text-center header-logo">
-                <div class="bg-theme mr-3 pt-3 pb-2 mb-0">
+                <div class="bg-info mr-3 pt-3 pb-2 mb-0">
                     <h3 class="logo"><a href="#" class="text-secondary logo"><i class="fa fa-rocket"></i> Sistem Informasi</a></h3>
                 </div>
             </div>
@@ -36,48 +36,17 @@
                         <!--Notification icon-->
 
                         <!-- kodingan jumlah notifikasi angka -->
-                        <?php
+                        <!-- <?php
 
-                        $this->db->like('notif', '0');
-                        $this->db->from('pengaduan');
-                        $notif = $this->db->count_all_results();
-                        ?>
+                                // $this->db->like('notif', '0');
+                                // $this->db->from('pengaduan');
+                                // $notif = $this->db->count_all_results();
+                                ?> -->
                         <!-- notif angkat -->
-                        <div class="menu-icon">
-                            <!-- <a class="" href="#" onclick="toggle_dropdown(this); return false" role="button" class="dropdown-toggle">
-                                <i class="fa fa-bell"></i>
-                                <span class="badge badge-danger"><?= $notif ?></span>
-                            </a> -->
-                            <div class="dropdown dropdown-left bg-white shadow border">
-                                <a class="dropdown-item" href="#"><strong>Notifications</strong></a>
-                                <?php $pengaduan = $this->Admin_model->getAllPelaporan();
-                                foreach ($pengaduan as $pg) : ?>
-                                    <div class="dropdown-divider"></div>
-                                    <a href="<?= base_url(); ?>masterdata/edit-pengaduan/<?= $pg['id_pelanggan']; ?>/<?= $pg['id']; ?>" class="dropdown-item">
-                                        <div class="media">
-                                            <div class="align-self-center mr-3 rounded-circle notify-icon bg-primary">
-                                                <i class="fa fa-bookmark"></i>
-                                            </div>
-                                            <div class="media-body">
-                                                <h6 class="mt-0"><strong><?= $pg['nampel']; ?></strong></h6>
-                                                <p><?= $pg['isi']; ?></p>
-                                                <small class="text-success"><?= $pg['tanggal']; ?></small>
-                                            </div>
-                                        </div>
-                                    </a>
 
-                                <?php endforeach; ?>
-
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item text-center link-all" href="#">See all notifications ></a>
-                            </div>
-                        </div>
                         <!--Notication icon-->
 
 
-                        <span class="menu-icon">
-                            <i class="fa fa-th-large"></i>
-                        </span>
                     </div>
                     <!--Menu Icons-->
 

@@ -56,81 +56,87 @@
 
     // backend riri
     // halaman login
-    $route['Login'] = 'auth/index';
+    // $route['Login'] = 'auth/index';
     // dashboard
     $route['admin/dashboard'] = 'admin/index';
-    // lokasi
-    $route['admin/lokasi'] = 'admin/lokasi';
-    $route['admin/hapus-lokasi/(:any)'] = 'admin/hapus/$1';
-    $route['admin/tambah-lokasi'] = 'admin/tambah';
-    $route['admin/edit-lokasi/(:any)'] = 'admin/edit/$1';
-    // bus
-    $route['admin/bus'] = 'admin/bus_index';
-    $route['admin/tambah-bus'] = 'admin/tambah_bus';
-    $route['admin/edit-bus/(:any)'] = 'admin/edit_bus/$1';
-    $route['admin/hapus-bus/(:any)'] = 'admin/hapus_bus/$1';
-    //seat
-    $route['admin/seat'] = 'admin/seat_index';
-    $route['admin/tambah-seat'] = 'admin/tambah_seat';
-    $route['admin/hapus-seat/(:any)'] = 'admin/hapus_seat/$1';
-    $route['admin/hapus-allseat'] = 'admin/hapus_semua_seat';
+    // jabatan
+    $route['admin/jabatan'] = 'admin/jabatan';
+    $route['admin/tambah-jabatan'] = 'admin/tambah_jabatan';
+    $route['admin/hapus-jabatan/(:any)'] = 'admin/hapus_jabatan/$1';
+    $route['admin/edit-jabatan'] = 'admin/edit_jabatan';
+    // Pegawai
+    $route['admin/pegawai'] = 'admin/pegawai';
+    $route['admin/tambah-pegawai'] = 'admin/tambah_pegawai';
+    $route['admin/edit-pegawai'] = 'admin/edit_pegawai';
+    $route['admin/hapus-pegawai/(:any)/(:any)'] = 'admin/hapus_pegawai/$1/$2';
+    $route['admin/detail-pegawai/(:any)'] = 'admin/detail_pegawai/$1';
+    //akun
+    $route['admin/akun-pegawai'] = 'admin/akun_pegawai';
+    $route['admin/reset-password/(:any)'] = 'admin/reset_password/$1';
+    //lembur pegawai
 
-    //Kelola Jadwal
-    $route['admin/jadwal'] = 'admin/jadwal_index';
-    $route['admin/tambah-jadwal'] = 'admin/tambah_jadwal';
-    $route['admin/edit-jadwal'] = 'admin/edit_jadwal';
-    $route['admin/hapus-jadwal/(:any)'] = 'admin/hapus_jadwal/$1';
-    $route['admin/berangkat-jadwal/(:any)'] = 'admin/berangkat_jadwal/$1';
-    $route['admin/cetak-jadwal'] = 'admin/printjadwal';
-    //Kelola 
-    $route['admin/konfirmasi-pembayaran'] = 'admin/pembayaran_index';
-    $route['admin/verifikasi-pembayaran/(:any)'] = 'admin/pembayaran_verifikasi/$1';
-    //transaksi
-    $route['admin/data-transaksi'] = 'admin/datatransaksi_index';
-    $route['admin/detail-transaksi/(:any)'] = 'admin/detailtransaksi/$1';
-    $route['admin/cetak-Transaksi/(:any)/(:any)'] = 'admin/cetak_transaksi/$1/$2';
-    $route['admin/cetakdetail-Transaksi/(:any)'] = 'admin/cetak_detailtransaksi/$1';
-
-
-    // $route['admin/tambah-jadwal'] = 'admin/tambah_jadwal';
-    // $route['admin/edit-jadwal'] = 'admin/edit_jadwal';
-    // $route['admin/hapus-jadwal/(:any)'] = 'admin/hapus_jadwal/$1';
-    // $route['admin/berangkat-jadwal/(:any)'] = 'admin/berangkat_jadwal/$1';
-    // $route['admin/cetak-jadwal'] = 'admin/printjadwal';
+    $route['admin/tampil-konfirmasi'] = 'admin/tampil_konfirmasi';
+    $route['admin/konfirmasi-absen/(:any)'] = 'admin/konfirmasi_absen/$1';
+    $route['admin/konfirmasi-absen-pulang/(:any)'] = 'admin/konfirmasi_absen_pulang/$1';
+    $route['admin/konfirmasi-absen-lembur/(:any)/(:any)'] = 'admin/konfirmasi_absen_lembur/$1/$2';
+    $route['admin/konfirmasi-absen-izinsakit/(:any)'] = 'admin/konfirmasi_absen_izin_sakit/$1';
+    $route['admin/konfirmasi-absen-izin-tidak-masuk/(:any)'] = 'admin/konfirmasi_absen_izin_tdkmsk/$1';
 
 
 
+    $route['admin/tambah-lembur'] = 'admin/lembur_pegawai';
+    $route['admin/simpan-lembur'] = 'admin/simpan_lembur_pegawai';
+    $route['admin/edit-lembur'] = 'admin/edit_lembur_pegawai';
+    $route['admin/hapus-lembur/(:any)'] = 'admin/hapus_lembur_pegawai/$1';
+    $route['admin/tambah-lembur'] = 'admin/lembur_pegawai';
 
 
 
+    $route['admin/absen-bulanan'] = 'admin/absen_bulanan';
+    $route['admin/cetak-absen-bulanan/(:any)/(:any)/(:any)'] = 'admin/cetak_absen_bulanan/$1/$2/$3';
+    $route['admin/detail-absen/(:any)'] = 'admin/detail_absen/$1';
+
+    // 
+    $route['admin/edit-profil/(:any)'] = 'admin/edit_profil/$1';
+    $route['admin/edit-password/(:any)'] = 'admin/edit_password/$1';
 
 
-    //FRONTEND RIRI
-    $route['home'] = 'guest/keHomepage';
-    $route['konfirmasi'] = 'guest/konfirmasiPage';
-    $route['pembatalan'] = 'guest/pembatalanPage';
-    $route['tentang'] = 'guest/keHomeTentang';
-    $route['kontak'] = 'guest/keHomeKontak';
-    
-    $route['Vkalkulator'] = 'guest/keHomeKalkulator';
-    $route['cariTiket'] = 'guest/cari_tiket';
-    $route['pesan/(:any)'] = 'guest/pesan/$1';
-    $route['pesanTiket'] = 'guest/pesanTiket';
-    $route['pembayaran'] = 'guest/keHalamanPembayaran';
-    $route['printpembayaran'] = 'guest/printpembayaran';
-    $route['kirimKonfirmasi'] = 'guest/kirimKonfirmasi';
-    $route['print'] = 'guest/print';
-    $route['tentang'] = 'guest/keHomeTentang';
-    $route['kontak'] = 'guest/keHomeKontak';
-    $route['riwayat'] = 'guest/Riwayat';
+    // lembur bulanan
+    $route['admin/lembur-bulanan'] = 'admin/lembur_bulanan';
+    $route['admin/cetak-absen-lembur/(:any)/(:any)'] = 'admin/cetak_absen_lembur/$1/$2';
+    // TPP GAJI
+    $route['admin/tpp-bulanan'] = 'admin/tpp_bulanan';
+    $route['admin/laporan-tpp-bulanan'] = 'admin/laporan_tpp_bulanan';
+    $route['admin/detail-laporan-tpp/(:any)/(:any)/(:any)'] = 'admin/detail_laporan_tpp_bulanan/$1/$2/$3';
+    $route['admin/cetak-payrol-pegawai/(:any)/(:any)/(:any)'] = 'admin/cetak_payrol_pegawai/$1/$2/$3';
 
-    $route['PilihSeat'] = 'guest/PilihSeat';
 
-    $route['cekKonfirmasi'] = 'guest/cekKonfirmasi';
-    $route['cekPembatalan'] = 'guest/cekPembatalan';
-    $route['batalkanTiket'] = 'guest/batalkanTiket';
+    $route['admin/akumulasi-gaji'] = 'admin/akumulasi_gaji';
+    $route['admin/simpan-gaji'] = 'admin/simpan_gaji';
+    $route['admin/edit-gaji'] = 'admin/edit_gaji';
+    $route['admin/hapus-gaji/(:any)'] = 'admin/hapus_gaji/$1';
+    // $route['admin/cetak-absen-lembur/(:any)/(:any)'] = 'admin/cetak_absen_lembur/$1/$2';
 
-    $route['default_controller'] = 'guest/keHomepage';
-    // $route['default_controller'] = 'frontend';
+    // $route['admin/detail-absen/(:any)'] = 'admin/detail_absen/$1';
+
+
+    // Pegwai
+    $route['pegawai/edit-profil/(:any)'] = 'pegawai/edit_profil/$1';
+    $route['pegawai/edit-password/(:any)'] = 'pegawai/edit_password/$1';
+    $route['pegawai/absen-harian'] = 'pegawai/absen_harian';
+    $route['pegawai/ambilabsen'] = 'pegawai/ambil_absen';
+    $route['pegawai/ambilabsen-pulang'] = 'pegawai/ambil_absen_pulang';
+    $route['pegawai/ambilabsen-lembur'] = 'pegawai/ambil_absen_lembur';
+    $route['pegawai/cuti-pegawai'] = 'pegawai/cuti_pegawai';
+    $route['pegawai/konfirmasi-absen'] = 'pegawai/konfirmasi_absen';
+    $route['pegawai/absen-bulanan'] = 'pegawai/absen_bulanan';
+    $route['pegawai/detail-absen/(:any)'] = 'pegawai/detail_absen/$1';
+    $route['pegawai/laporan-tpp-bulanan'] = 'pegawai/laporan_tpp_bulanan';
+    $route['pegawai/detail-laporan-tpp/(:any)/(:any)/(:any)'] = 'pegawai/detail_laporan_tpp_bulanan/$1/$2/$3';
+    $route['pegawai/cetak-payrol-pegawai/(:any)/(:any)/(:any)'] = 'pegawai/cetak_payrol_pegawai/$1/$2/$3';
+
+    // febby
+
+    $route['default_controller'] = 'auth';
     $route['404_override'] = '';
     $route['translate_uri_dashes'] = FALSE;

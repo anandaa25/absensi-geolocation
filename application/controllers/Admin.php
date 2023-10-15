@@ -3,764 +3,962 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Admin extends CI_Controller
 {
-	public function __construct()
-	{
-		parent::__construct();
-		if ($this->session->userdata('masuk_admin') != TRUE) {
-			$url = base_url('auth');
-			redirect($url);
-		};
-		$this->load->library('form_validation');
-		$this->load->model('Admin_model');
-	}
-
-	public function index()
-	{
-		$data['title'] = 'Dashboard';
-		// mengambil data user berdasarkan email yang ada di session
-		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
-
-		$this->db->from('jadwal');
-		$data['jumjad'] = $this->db->count_all_results();
-
-
-
-		$this->db->from('pembayaran');
-		$data['jumtran'] = $this->db->count_all_results();
-
-
-
-		$this->db->from('pelanggan');
-		$data['jumpel'] = $this->db->count_all_results();
-
-		$this->load->view('backend/template/header', $data);
-		$this->load->view('backend/template/topbar', $data);
-		$this->load->view('backend/template/sidebar', $data);
-		$this->load->view('backend/admin/dashboard/index', $data);
-		$this->load->view('backend/template/footer');
-	}
-
-	public function lokasi()
-	{
-		$data['title'] = 'Kelola Lokasi';
-		// mengambil data user berdasarkan email yang ada di session
-		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
-		// $data['petugas'] = $this->db->get_where('user')->result_array();
-
-		$data['lokasi'] = $this->Admin_model->getAlllokasi();
-
-		$this->load->view('backend/template/header', $data);
-		$this->load->view('backend/template/topbar', $data);
-		$this->load->view('backend/template/sidebar', $data);
-		$this->load->view('backend/admin/lokasi/index', $data);
-		$this->load->view('backend/template/footer');
-	}
-
-	public function tambah()
-	{
-		$data['title'] = 'Kelola Lokasi';
-		// mengambil data user berdasarkan email yang ada di session
-		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
-		// $data['petugas'] = $this->db->get_where('user')->result_array();
-		$nama = $this->input->post('xnama', true);
-		$data = [
-			"nama_daerah" => $nama,
-
-		];
-		$this->db->insert('lokasi', $data);
-		$this->session->set_flashdata('flash', 'Berhasil ditambah');
-		redirect('admin/lokasi');
-	}
-	public function edit($id)
-	{
-		$data['title'] = 'Kelola Lokasi';
-		// mengambil data user berdasarkan email yang ada di session
-		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
-		// $data['petugas'] = $this->db->get_where('user')->result_array();
-		$nama = $this->input->post('xnama', true);
-		$data = [
-			"nama_daerah" => $nama,
-
-		];
-		$this->db->where('id_lokasi', $id);
-		$this->db->update('lokasi', $data);
-		$this->session->set_flashdata('flash', 'Berhasil diedit');
-		redirect('admin/lokasi');
-	}
-
-
-	public function hapus($id)
-	{
-		$this->db->where('id_lokasi', $id);
-		$this->db->delete('lokasi');
-		$this->session->set_flashdata('flash', ' Berhasil Dihapus');
-		redirect('admin/lokasi');
-	}
-
-	// bus
-	public function bus_index()
-	{
-		$data['title'] = 'Kelola Bus';
-		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-		$data['bus'] = $this->Admin_model->getAllbus();
-
-		$this->load->view('backend/template/header', $data);
-		$this->load->view('backend/template/topbar', $data);
-		$this->load->view('backend/template/sidebar', $data);
-		$this->load->view('backend/admin/bus/index', $data);
-		$this->load->view('backend/template/footer');
-	}
-
-	public function tambah_bus()
-	{
-		$data['title'] = 'Kelola Bus';
-		// mengambil data user berdasarkan email yang ada di session
-		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
-		// $data['petugas'] = $this->db->get_where('user')->result_array();
-		$nama = $this->input->post('xnama', true);
-		$fasilitas = $this->input->post('xfasilitas', true);
-		$plat = $this->input->post('xplat', true);
-		$kursi = $this->input->post('xkursi', true);
-		$data = [
-			"nama_bus" => $nama,
-			"fasilitas" => $fasilitas,
-			"plat" => $plat,
-			"kursi" => $kursi,
-		];
-		$this->db->insert('bus', $data);
-		$this->session->set_flashdata('flash', 'Berhasil ditambah');
-		redirect('admin/bus');
-	}
-	public function edit_bus($id)
-	{
-		$data['title'] = 'Kelola Lokasi';
-		// mengambil data user berdasarkan email yang ada di session
-		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
-		// $data['petugas'] = $this->db->get_where('user')->result_array();
-		$nama = $this->input->post('xnama', true);
-		$fasilitas = $this->input->post('xfasilitas', true);
-		$plat = $this->input->post('xplat', true);
-
-		$kursi = $this->input->post('xkursi', true);
-
-		$data = [
-			"nama_bus" => $nama,
-			"fasilitas" => $fasilitas,
-			"kursi" => $kursi,
-			"plat" => $plat,
-
-		];
-		$this->db->where('id_bus', $id);
-		$this->db->update('bus', $data);
-		$this->session->set_flashdata('flash', 'Berhasil diedit');
-		redirect('admin/bus');
-	}
-
-
-	public function hapus_bus($id)
-	{
-		$this->db->where('id_bus', $id);
-		$this->db->delete('bus');
-		$this->session->set_flashdata('flash', ' Berhasil Dihapus');
-		redirect('admin/bus');
-	}
-
-
-
-	// sat
-	public function seat_index()
-	{
-		$data['title'] = 'Kelola Seat';
-		// mengambil data user berdasarkan email yang ada di session
-		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
-		// $data['petugas'] = $this->db->get_where('user')->result_array();
-
-		$data['seat'] = $this->Admin_model->getAllseat();
-		$data['idseat'] = $this->Admin_model->getAllseatbyid();
-		// var_dump($data1);
-		// die;
-		$data['bus'] = $this->Admin_model->getAlljadwalbus();
-
-		$this->load->view('backend/template/header', $data);
-		$this->load->view('backend/template/topbar', $data);
-		$this->load->view('backend/template/sidebar', $data);
-		$this->load->view('backend/admin/seat/index', $data);
-		$this->load->view('backend/template/footer');
-	}
-
-	// public function tambah_seat()
-	// {
-	// 	$data['title'] = 'Kelola Seat';
-	// 	// mengambil data user berdasarkan email yang ada di session
-	// 	$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
-	// 	// $data['petugas'] = $this->db->get_where('user')->result_array();
-	// 	$bus = $this->input->post('xbus', true);
-	// 	$jumlah = $this->input->post('xjumlah', true);
-
-
-
-	// 	$this->Admin_model->insertKursi($bus, $jumlah);
-	// 	$this->session->set_flashdata('flash', 'Berhasil ditambah');
-	// 	redirect('admin/seat');
-	// }
-
-
-
-	public function hapus_seat($id)
-	{
-		$this->db->where('id_kursi', $id);
-		$this->db->delete('kursi');
-		$this->session->set_flashdata('flash', ' Berhasil Dihapus');
-		redirect('admin/seat');
-	}
-
-	public function hapus_semua_seat()
-	{
-
-		$idjadwal = $this->input->post('xbus', true);
-		$this->db->where('id_jadwal', $idjadwal);
-		$this->db->delete('kursi');
-		$this->session->set_flashdata('flash', ' Berhasil Dihapus');
-		redirect('admin/seat');
-	}
-
-	// jadwal
-	public function jadwal_index()
-	{
-		$data['title'] = 'Kelola Jadwal';
-		// mengambil data user yang login berdasarkan email yang ada di session
-		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
-
-		$data['jadwal'] = $this->Admin_model->getAlljadwal();
-		$data['bus'] = $this->Admin_model->getAllbus();
-		$data['lokasi'] = $this->Admin_model->getAlllokasi();
-
-		$this->load->view('backend/template/header', $data);
-		$this->load->view('backend/template/topbar', $data);
-		$this->load->view('backend/template/sidebar', $data);
-		$this->load->view('backend/admin/jadwal/index', $data);
-		$this->load->view('backend/template/footer');
-	}
-
-	public function tambah_jadwal()
-	{
-		$data['title'] = 'Kelola Jadwal';
-		// mengambil data user berdasarkan email yang ada di session
-		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
-		$bus = $this->input->post('xbus', true);
-		$asal = $this->input->post('xasal', true);
-		$tujuan = $this->input->post('xtujuan', true);
-		$tanggal = $this->input->post('xtanggal', true);
-		$hargga = $this->input->post('xharga', true);
-		$status = $this->input->post('xstatus', true);
-
-		$data1 = $this->db->get_where('bus', ['id_bus' => $bus])->row_array();
-
-		$idjadwal = $this->Admin_model->getN_AI();
-		$idjadwal = $idjadwal['id_jadwal'] + 1;
-
-		$data = [
-			"id_jadwal" => $idjadwal,
-			"id_bus" => $bus,
-			"id_asal" => $asal,
-			"id_tujuan" => $tujuan,
-			"tgl_berangkat" => $tanggal,
-			"harga" => $hargga,
-			"status" => $status
-
-		];
-		$this->db->insert('jadwal', $data);
-		$totkursi = $data1['kursi'];
-		$this->Admin_model->insertKursi($idjadwal, $totkursi);
-		$this->session->set_flashdata('flash', 'Berhasil ditambah');
-		redirect('admin/jadwal');
-	}
-
-	public function edit_jadwal()
-	{
-		$data['title'] = 'Kelola jadwal';
-		// mengambil data user berdasarkan email yang ada di session
-		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
-		// $data['petugas'] = $this->db->get_where('user')->result_array();
-		$nama = $this->input->post('xnama', true);
-		$fasilitas = $this->input->post('xfasilitas', true);
-
-		$id_jadwal = $this->input->post('kode', true);
-		$bus = $this->input->post('xbus', true);
-		$asal = $this->input->post('xasal', true);
-		$tujuan = $this->input->post('xtujuan', true);
-		$tanggal = $this->input->post('xtanggal', true);
-		$hargga = $this->input->post('xharga', true);
-		$status = $this->input->post('xstatus', true);
-
-		$data = [
-			"id_bus" => $bus,
-			"id_asal" => $asal,
-			"id_tujuan" => $tujuan,
-			"tgl_berangkat" => $tanggal,
-			"harga" => $hargga,
-			"status" => $status
-
-		];
-
-		$this->db->where('id_jadwal', $id_jadwal);
-		$this->db->update('jadwal', $data);
-		$this->session->set_flashdata('flash', 'Berhasil diedit');
-		redirect('admin/jadwal');
-	}
-
-	public function hapus_jadwal($id)
-	{
-		$this->db->where('id_jadwal', $id);
-		$this->db->delete('jadwal');
-		$this->session->set_flashdata('flash', ' Berhasil Dihapus');
-		redirect('admin/jadwal');
-	}
-
-
-	public function berangkat_jadwal($id)
-	{
-		$data['title'] = 'Kelola jadwal';
-		// mengambil data user berdasarkan email yang ada di session
-		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-		$data['jadwal'] = $this->Admin_model->getAlljadwal();
-		$status_berangkat = $this->Admin_model->CekstatusBerangkat($id);
-
-
-		if ($status_berangkat['status'] == 0) {
-			$data = [
-				"status" => 1,
-			];
-		}
-		if ($status_berangkat['status'] == 1) {
-			$data = [
-				"status" => 0,
-			];
-		}
-
-		$this->db->where('id_jadwal', $id);
-		$this->db->update('jadwal', $data);
-		$this->session->set_flashdata('flash', 'Berhasil diedit');
-		redirect('admin/jadwal');
-	}
-	public function printjadwal()
-	{
-		// var_dump('haha');
-		// die;
-		$this->load->library('mypdf');
-		$data['jadwal'] = $this->Admin_model->getAlljadwal();
-		$data['lokasi'] = $this->Admin_model->getAlllokasi();
-		$this->mypdf->generate('backend/admin/jadwal/cetakjadwal', $data);
-	}
-
-	//pembayaran
-	public function pembayaran_index()
-	{
-		$data['title'] = 'Pembayaran';
-		// mengambil data user berdasarkan email yang ada di session
-		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
-		// $data['petugas'] = $this->db->get_where('user')->result_array();
-
-		$data['pembayaran'] = $this->Admin_model->getAllpembayaran();
-		// $data['bus'] = $this->Admin_model->getAllbus();
-		// $data['lokasi'] = $this->Admin_model->getAlllokasi();
-
-		$this->load->view('backend/template/header', $data);
-		$this->load->view('backend/template/topbar', $data);
-		$this->load->view('backend/template/sidebar', $data);
-		$this->load->view('backend/admin/pembayaran/index', $data);
-		$this->load->view('backend/template/footer');
-	}
-
-	public function pembayaran_verifikasi($id)
-	{
-
-		$status = $this->Admin_model->getStatusPem($id);
-
-		if ($status['status'] == 1) {
-			$data = [
-				"status" => 2,
-			];
-		}
-		if ($status['status'] == 2) {
-			$data = [
-				"status" => 1,
-			];
-		}
-		$this->db->where('nomor_pembayaran', $id);
-		$this->db->update('pembayaran', $data);
-		$this->session->set_flashdata('flash', 'Berhasil diedit');
-		redirect('admin/konfirmasi-pembayaran');
-	}
-
-	public function hapus_pembayaran($id)
-	{
-		$this->db->where('id_jadwal', $id);
-		$this->db->delete('jadwal');
-		$this->session->set_flashdata('flash', ' Berhasil Dihapus');
-		redirect('admin/jadwal');
-	}
-
-
-
-
-	// BATAS RIRI
-
-	//petugas
-	public function petugas()
-	{
-		$data['title'] = 'Petugas';
-		// mengambil data user berdasarkan email yang ada di session
-		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
-		// $data['petugas'] = $this->db->get_where('user')->result_array();
-
-		$data['petugas'] = $this->Admin_model->getAllPetugas();
-		// var_dump($data1);
-		// die;
-
-		$this->load->view('backend/template/header', $data);
-		$this->load->view('backend/template/topbar', $data);
-		$this->load->view('backend/template/sidebar', $data);
-		$this->load->view('backend/admin/petugas/index', $data);
-		$this->load->view('backend/template/footer');
-	}
-	public function editpetugas($id)
-	{
-		$data['title'] = 'Petugas';
-		$data['user'] =  $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-		$data['petugasdetail'] =  $this->db->get_where('user', ['id' => $id])->row_array();
-		$this->form_validation->set_rules('nama', 'nama', 'required', [
-			'required' => 'nama belum diisi!'
-		]);
-
-		if ($this->form_validation->run() == false) {
-
-			$this->load->view('backend/template/header', $data);
-			$this->load->view('backend/template/topbar', $data);
-			$this->load->view('backend/template/sidebar', $data);
-			$this->load->view('backend/admin/petugas/edit', $data);
-			$this->load->view('backend/template/footer');
-		} else {
-			$nama = $this->input->post('nama', true);
-			$notelp = $this->input->post('notelp', true);
-			$email = $this->input->post('email', true);
-			$data = [
-				"name" => $nama,
-				"no_telp" => $notelp,
-				"email" => $email,
-			];
-			$this->db->where('id', $id);
-			$this->db->update('user', $data);
-			$this->session->set_flashdata('flash', 'Berhasil diedit');
-			redirect('admin/petugas');
-		}
-	}
-
-	public function resetpasswordpetugas()
-	{
-		$id = $_GET['id'];
-		$passwordbaru = "12345";
-
-		$data = [
-			"password" => password_hash($passwordbaru, PASSWORD_DEFAULT)
-		];
-
-		$this->db->where('id', $id);
-		$this->db->update('user', $data);
-
-
-		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
-			Password suda direset!
-		 	 </div>');
-
-		redirect('admin/petugas');
-	}
-
-	public function konfirmasi_petugas()
-	{
-		$id = $_GET['id'];
-		$status = $_GET['status'];
-		// var_dump($status);
-		// die;
-		if ($status == 0) {
-			$data = [
-				"is_active" => 1,
-			];
-
-			$this->db->where('id', $id);
-			$this->db->update('user', $data);
-			redirect('admin/petugas');
-		} else if ($status == 1) {
-			$data = [
-				"is_active" => 0,
-			];
-
-			$this->db->where('id', $id);
-			$this->db->update('user', $data);
-			redirect('admin/petugas');
-		}
-	}
-
-	/// PELANGGAN
-
-	public function index_pelanggan()
-	{
-		$data['title'] = 'Pelanggan';
-		// mengambil data user berdasarkan email yang ada di session
-		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
-		// $data['petugas'] = $this->db->get_where('user')->result_array();
-
-		$data['pelanggan'] = $this->Admin_model->getAllPelanggan();
-		// var_dump($data1);
-		// die;
-
-		$this->load->view('backend/template/header', $data);
-		$this->load->view('backend/template/topbar', $data);
-		$this->load->view('backend/template/sidebar', $data);
-		$this->load->view('backend/admin/pelanggan/index', $data);
-		$this->load->view('backend/template/footer');
-	}
-
-	public function editpelanggan($id)
-	{
-		$data['title'] = 'Pelanggan';
-		$data['user'] =  $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-		$data['pelanggandetail'] =  $this->db->get_where('pelanggan', ['id_pelanggan' => $id])->row_array();
-		$data['jekel'] = ['L', 'P'];
-
-		$this->form_validation->set_rules('nama', 'nama', 'required', [
-			'required' => 'nama belum diisi!'
-		]);
-
-		if ($this->form_validation->run() == false) {
-
-			$this->load->view('backend/template/header', $data);
-			$this->load->view('backend/template/topbar', $data);
-			$this->load->view('backend/template/sidebar', $data);
-			$this->load->view('backend/admin/pelanggan/edit', $data);
-			$this->load->view('backend/template/footer');
-		} else {
-			$id = $this->input->post('id', true);
-			$nama = $this->input->post('nama', true);
-			$jekel = $this->input->post('jekel', true);
-			$alamat = $this->input->post('alamat', true);
-			$telp = $this->input->post('telp', true);
-			$data = [
-				"id_pelanggan" => $id,
-				"nama_pelanggan" => $nama,
-				"jekel_pelanggan" => $jekel,
-				"alamat" => $alamat,
-				"telp" => $telp,
-			];
-			$this->db->where('id_pelanggan', $id);
-			$this->db->update('pelanggan', $data);
-			$this->session->set_flashdata('flash', 'Berhasil diedit');
-			redirect('admin/index_pelanggan');
-		}
-	}
-
-	public function tambah_pelanggan()
-	{
-		$data['title'] = 'Pelanggan';
-		$data['user'] =  $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-		$data['jekel'] = ['L', 'P'];
-
-		$this->form_validation->set_rules('nama', 'nama', 'required', [
-			'required' => 'nama belum diisi!'
-		]);
-
-		$this->form_validation->set_rules('jekel', 'jekel', 'required', [
-			'required' => 'jenis kelamin belum diisi!'
-		]);
-
-		if ($this->form_validation->run() == false) {
-
-			$this->load->view('backend/template/header', $data);
-			$this->load->view('backend/template/topbar', $data);
-			$this->load->view('backend/template/sidebar', $data);
-			$this->load->view('backend/admin/pelanggan/tambah', $data);
-			$this->load->view('backend/template/footer');
-		} else {
-			$id = $this->input->post('id', true);
-			$nama = $this->input->post('nama', true);
-			$jekel = $this->input->post('jekel', true);
-			$alamat = $this->input->post('alamat', true);
-			$telp = $this->input->post('telp', true);
-			$data = [
-				"id_pelanggan" => $id,
-				"nama_pelanggan" => $nama,
-				"jekel_pelanggan" => $jekel,
-				"alamat" => $alamat,
-				"telp" => $telp,
-			];
-			$this->db->insert('pengaduan', $data);
-			$this->session->set_flashdata('flash', 'Berhasil ditambah');
-			redirect('admin/index_pelanggan');
-		}
-	}
-
-	public function hapuspelanggan($id)
-	{
-		$this->db->where('id', $id);
-		$this->db->delete('pelanggan');
-		$this->session->set_flashdata('flash', ' Berhasil Dihapus');
-		redirect('admin/index_pelanggan');
-	}
-
-
-	///pengaduan
-	public function index_pengaduan()
-	{
-		$data['title'] = 'Pengaduan';
-		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-		$data['pengaduan'] = $this->Admin_model->getAllPelaporan();
-		// $data['notif'] = $this->Admin_model->getAllNewNotif();
-
-
-		$this->load->view('backend/template/header', $data);
-		$this->load->view('backend/template/topbar', $data);
-		$this->load->view('backend/template/sidebar', $data);
-		$this->load->view('backend/admin/pengaduan/index', $data);
-		$this->load->view('backend/template/footer');
-	}
-
-
-	public function editpengaduan($idpeg, $id)
-	{
-		$data['title'] = 'Pengaduan';
-
-		$data['user'] =  $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
-		$data['pengaduandetail'] = $this->Admin_model->getPelaporanDetail($id);
-		// var_dump($data1);
-		// die;
-
-		$data['stapeng'] = ['0', '1', '2'];
-		$this->form_validation->set_rules('nama', 'nama', 'required', [
-			'required' => 'nama belum diisi!'
-		]);
-
-
-		if ($this->form_validation->run() == false) {
-
-			$this->load->view('backend/template/header', $data);
-			$this->load->view('backend/template/topbar', $data);
-			$this->load->view('backend/template/sidebar', $data);
-			$this->load->view('backend/admin/pengaduan/edit', $data);
-			$this->load->view('backend/template/footer');
-		} else {
-			$status = $this->input->post('status', true);
-
-			$data = [
-				"status" => $status,
-				"notif" => 1
-			];
-
-			// var_dump($id	);
-			// die;
-			$this->db->where('id', $id);
-			$this->db->update('pengaduan', $data);
-			$this->session->set_flashdata('flash', 'Berhasil diedit');
-			redirect('admin/index_pengaduan');
-		}
-	}
-
-	public function hapuspengaduan($id)
-	{
-		$this->db->where('id', $id);
-		$this->db->delete('pengaduan');
-		$this->session->set_flashdata('flash', ' Berhasil Dihapus');
-		redirect('admin/index_pengaduan');
-	}
-
-	// datatransaksi
-	public function datatransaksi_index()
-	{
-		$data['title'] = 'Data Transaksi';
-		// mengambil data user berdasarkan email yang ada di session
-		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
-		// $data['petugas'] = $this->db->get_where('user')->result_array();
-		// 
-		$data['list_th'] = $this->Admin_model->getTahun();
-		$data['list_bln'] = $this->Admin_model->getBln();
-		$thn = $this->input->post('th');
-		$bln = $this->input->post('bln');
-		$thnpilihan1 = $thn . '-' . '0' . $bln . '-' . '01';
-		$thnpilihan2 = $thn . '-' . '0' . $bln . '-' . '31';
-		// 
-		$data['datatransaksi'] = $this->Admin_model->getAllTransaksi($thnpilihan1, $thnpilihan2);
-		$data['lokasi'] = $this->Admin_model->getAlllokasi();
-		// var_dump($data['datatransaksi']);
-		// die;
-		$data['blnnya'] = $bln;
-		$data['thn'] = $thn;
-
-
-		$this->load->view('backend/template/header', $data);
-		$this->load->view('backend/template/topbar', $data);
-		$this->load->view('backend/template/sidebar', $data);
-		$this->load->view('backend/admin/transaksi/index', $data);
-		$this->load->view('backend/template/footer');
-	}
-	public function detailtransaksi($kodebooking)
-	{
-		$data['title'] = 'Detail Transaksi';
-
-
-		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-		$data['detail_transaksi'] = $this->Admin_model->getAllDetailTransaksi($kodebooking);
-		$data['penumpang'] = $this->Admin_model->getPenumpang($kodebooking);
-		$data['lokasi'] = $this->Admin_model->getAlllokasi();
-
-		$this->load->view('backend/template/header', $data);
-		$this->load->view('backend/template/topbar', $data);
-		$this->load->view('backend/template/sidebar', $data);
-		$this->load->view('backend/admin/detail_transaksi/index', $data);
-		$this->load->view('backend/template/footer');
-	}
-
-
-	public function cetak_transaksi($thn, $bln)
-	{
-		$this->load->library('mypdf');
-
-		$data['blnnya'] = $bln;
-		$data['thn'] = $thn;
-
-
-		$thnpilihan1 = $thn . '-' . '0' . $bln . '-' . '01';
-		$thnpilihan2 = $thn . '-' . '0' . $bln . '-' . '31';
-		$data['lokasi'] = $this->Admin_model->getAlllokasi();
-		$data['transaksi'] = $this->Admin_model->getAllTlaporan($thnpilihan1, $thnpilihan2);
-		// var_dump($data['transaksi']);
-		// die;
-		$this->mypdf->generate('backend/admin/transaksi/cetaktransaksi', $data);
-	}
-
-	public function cetak_detailtransaksi($booking)
-	{
-		$this->load->library('mypdf');
-
-		$data['detail_transaksi'] = $this->Admin_model->getAllDetailTransaksi($booking);
-		$data['penumpang'] = $this->Admin_model->getPenumpang($booking);
-		$data['lokasi'] = $this->Admin_model->getAlllokasi();
-		// var_dump($data['transaksi']);
-		// die;
-		$this->mypdf->generate('backend/admin/detail_transaksi/cetakdetailtransaksi', $data);
-	}
+  public function __construct()
+  {
+    parent::__construct();
+    if ($this->session->userdata('masuk_admin') != TRUE) {
+      $url = base_url('auth');
+      redirect($url);
+    };
+    $this->load->library('form_validation');
+    $this->load->model('Admin_model');
+  }
+
+  public function index()
+  {
+    $data['title'] = 'Dashboard';
+    // mengambil data user berdasarkan email yang ada di session
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    // $data['hitung_pegawai'] = $this->Admin_model->getAlljabatan();
+    // $data['hitung_absen_hari_ini'] = $this->Admin_model->getAlljabatan();
+    // $data['laporan_absensi'] = $this->Admin_model->getAlljabatan();
+    // $data['gaji_pegawai'] = $this->Admin_model->getAlljabatan();
+
+    $this->load->view('backend/template/header', $data);
+    $this->load->view('backend/template/topbar', $data);
+    $this->load->view('backend/template/sidebar', $data);
+    $this->load->view('backend/admin/dashboard/index', $data);
+    $this->load->view('backend/template/footer');
+  }
+  public function edit_profil($id)
+  {
+    $data['title'] = 'Edit Profil';
+    // mengambil data user berdasarkan email yang ada di session
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    $nama = $this->input->post('nama', true);
+
+    $data1 = [
+      "name" => $nama,
+
+    ];
+    $this->db->where('id', $id);
+    $this->db->update('user', $data1);
+    $this->session->set_flashdata('flash', 'Berhasil diperbarui');
+    redirect('admin');
+  }
+  // 
+  public function edit_password($id)
+  {
+    $data['title'] = 'Edit Password';
+    // mengambil data user berdasarkan email yang ada di session
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    $password_lama = $this->input->post('password_lama', true);
+    $password_baru = $this->input->post('password_baru', true);
+    $password_baru1 = $this->input->post('password_baru1', true);
+    if (password_verify($password_lama, $data['user']['password'])) {
+      if ($password_baru == $password_baru1) {
+        $data = [
+          "password" => password_hash($password_baru, PASSWORD_DEFAULT),
+        ];
+        $this->db->where('id', $id);
+        $this->db->update('user', $data);
+        $this->session->set_flashdata('flash', 'Password Berhasil Diubah!');
+        redirect('admin');
+      } else {
+        $this->session->set_flashdata('flash', 'Konfirmasi Password Berbeda!');
+        redirect('admin');
+      }
+    } else {
+      $this->session->set_flashdata('flash', 'Password Lama Salah!');
+      redirect('admin');
+    }
+  }
+
+  public function jabatan()
+  {
+    $data['title'] = 'Data Jabatan';
+    // mengambil data user berdasarkan email yang ada di session
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    $data['jabatan'] = $this->Admin_model->getAlljabatan();
+    $this->load->view('backend/template/header', $data);
+    $this->load->view('backend/template/topbar', $data);
+    $this->load->view('backend/template/sidebar', $data);
+    $this->load->view('backend/admin/jabatan/index', $data);
+    $this->load->view('backend/template/footer');
+  }
+  public function tambah_jabatan()
+  {
+    $data['title'] = 'Data Jabatan';
+    // mengambil data user berdasarkan email yang ada di session
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
+    $jabatan = $this->input->post('jabatan', true);
+    $salary = $this->input->post('salary', true);
+    $overtime = $this->input->post('overtime', true);
+    $data = [
+      "jabatan" => $jabatan,
+      "salary" => $salary,
+      "overtime" => $overtime,
+
+    ];
+    $this->db->insert('jabatan', $data);
+    $this->session->set_flashdata('flash', 'Berhasil ditambah');
+    redirect('admin/jabatan');
+  }
+  public function edit_jabatan()
+  {
+    $data['title'] = 'Data Jabatan';
+    // mengambil data user berdasarkan email yang ada di session
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
+    $id_jabatan = $this->input->post('id_jabatan', true);
+    $jabatan = $this->input->post('jabatan', true);
+    $salary = $this->input->post('salary', true);
+    $overtime = $this->input->post('overtime', true);
+    $data = [
+      "jabatan" => $jabatan,
+      "salary" => $salary,
+      "overtime" => $overtime,
+
+    ];
+    $this->db->where('id_jabatan', $id_jabatan);
+    $this->db->update('jabatan', $data);
+    $this->session->set_flashdata('flash', 'Berhasil Diperbarui');
+    redirect('admin/jabatan');
+  }
+  public function hapus_jabatan($id)
+  {
+    $this->db->where('id_jabatan', $id);
+    $this->db->delete('jabatan');
+    $this->session->set_flashdata('flash', ' Berhasil Dihapus');
+    redirect('admin/jabatan');
+  }
+  public function pegawai()
+  {
+    $data['title'] = 'Data Pegawai';
+    // mengambil data user berdasarkan email yang ada di session
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    $data['pegawai'] = $this->Admin_model->getAllpegawai();
+    $data['jabatan'] = $this->Admin_model->getAlljabatan();
+    $data['jekel'] = ['L', 'P'];
+    $data['stapeg'] = [1, 0];
+    $data['agama'] = ['Islam', 'Protestan', 'Katolik', 'Hindu', 'Budha', 'Khonghucu'];
+    $this->load->view('backend/template/header', $data);
+    $this->load->view('backend/template/topbar', $data);
+    $this->load->view('backend/template/sidebar', $data);
+    $this->load->view('backend/admin/pegawai/index', $data);
+    $this->load->view('backend/template/footer');
+  }
+  public function detail_pegawai($id)
+  {
+    $data['title'] = 'Data Pegawai';
+    // mengambil data user berdasarkan email yang ada di session
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    $data['detail_pegawai'] = $this->Admin_model->getDetailpegawai($id);
+
+    $this->load->view('backend/template/header', $data);
+    $this->load->view('backend/template/topbar', $data);
+    $this->load->view('backend/template/sidebar', $data);
+    $this->load->view('backend/admin/pegawai/detail', $data);
+    $this->load->view('backend/template/footer');
+  }
+  public function tambah_pegawai()
+  {
+    $data['title'] = 'Data Pegawai';
+    // mengambil data user berdasarkan email yang ada di session
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
+    $id_user = $this->input->post('id_user', true);
+    $id_pegawai = $this->input->post('id_pegawai', true);
+    $nama_pegawai = $this->input->post('nama_pegawai', true);
+    $jekel = $this->input->post('jekel', true);
+    $pendidikan = $this->input->post('pendidikan', true);
+    $status_pegawai = $this->input->post('status_pegawai', true);
+    $email = $this->input->post('email', true);
+    // $ktp = $this->input->post('ktp', true);
+    $agama = $this->input->post('agama', true);
+    $jabatan = $this->input->post('jabatan', true);
+    $nohp = $this->input->post('nohp', true);
+    $alamat = $this->input->post('alamat', true);
+    $tgl_msk = $this->input->post('tgl_msk', true);
+    $temp = $this->input->post('temp', true);
+
+    //foto dan ktp 
+    $upload_image = $_FILES['userfilefoto']['name'];
+    $upload_image1 = $_FILES['userfilektp']['name'];
+    // var_dump($upload_image1);
+    // die;
+    if ($upload_image) {
+      $config['upload_path']          = './gambar/pegawai/';
+      $config['allowed_types']        = 'gif|jpg|png|PNG|jpeg';
+      $config['max_size']             = 10000;
+      $config['max_width']            = 10000;
+      $config['max_height']           = 10000;
+      $this->load->library('upload', $config);
+
+      if ($this->upload->do_upload('userfilefoto')) {
+        $new_image = $this->upload->data('file_name');
+        $data = $this->db->set('foto', $new_image);
+        $gambar_user = $new_image;
+      } else {
+        echo $this->upload->display_errors();
+      }
+    }
+    //upload foto ktp
+
+    if ($upload_image1) {
+      $config['upload_path']          = './gambar/pegawai/';
+      $config['allowed_types']        = 'gif|jpg|png|PNG|jpeg';
+      $config['max_size']             = 10000;
+      $config['max_width']            = 10000;
+      $config['max_height']           = 10000;
+      $this->load->library('upload', $config);
+
+      if ($this->upload->do_upload('userfilektp')) {
+        $new_image1 = $this->upload->data('file_name');
+        $data = $this->db->set('ktp', $new_image1);
+      } else {
+        echo $this->upload->display_errors();
+      }
+    }
+
+    // 
+    $data = [
+      "id_pegawai" => $id_pegawai,
+      "id_user" => $id_user,
+      "nama_pegawai" => $nama_pegawai,
+      "jekel" => $jekel,
+      "pendidikan" => $pendidikan,
+      "status_kepegawaian" => $status_pegawai,
+      "agama" => $agama,
+      "jabatan" => $jabatan,
+      "no_hp" => $nohp,
+      "alamat" => $alamat,
+      "tanggal_masuk" => $tgl_msk
+    ];
+    $this->db->insert('tb_pegawai', $data);
+
+    $data1 = [
+      "id" => $id_user,
+      "name" => $nama_pegawai,
+      "email" => $email,
+      "image" => $gambar_user,
+      "password" => password_hash('anggota', PASSWORD_DEFAULT),
+      'role_id' => 2,
+      'is_active' => 1,
+      'date_created' => time(),
+      'temp' => $temp
+
+    ];
+    $this->db->insert('user', $data1);
+    $this->session->set_flashdata('flash', 'Berhasil ditambah');
+    redirect('admin/pegawai');
+  }
+  public function edit_pegawai()
+  {
+    $data['title'] = 'Data Pegawai';
+    // mengambil data user berdasarkan email yang ada di session
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
+    $id_pegawai = $this->input->post('id_pegawai', true);
+    $id_user = $this->input->post('id_user', true);
+    $nama_pegawai = $this->input->post('nama_pegawai', true);
+    $jekel = $this->input->post('jekel', true);
+    $pendidikan = $this->input->post('pendidikan', true);
+    $status_pegawai = $this->input->post('status_pegawai', true);
+    $email = $this->input->post('email', true);
+    // $ktp = $this->input->post('ktp', true);
+    $agama = $this->input->post('agama', true);
+    $jabatan = $this->input->post('jabatan', true);
+    $nohp = $this->input->post('nohp', true);
+    $alamat = $this->input->post('alamat', true);
+    $tgl_msk = $this->input->post('tgl_msk', true);
+    $temp = $this->input->post('temp', true);
+
+
+    //foto dan ktp 
+    $upload_image = $_FILES['userfilefoto']['name'];
+    if ($upload_image) {
+      $config['upload_path']          = './gambar/pegawai/';
+      $config['allowed_types']        = 'gif|jpg|png|PNG';
+      $config['max_size']             = 10000;
+      $config['max_width']            = 10000;
+      $config['max_height']           = 10000;
+      $this->load->library('upload', $config);
+
+      if ($this->upload->do_upload('userfilefoto')) {
+        $new_image = $this->upload->data('file_name');
+        $data = $this->db->set('foto', $new_image);
+        $gambar_user  = $new_image;
+      } else {
+        echo $this->upload->display_errors();
+      }
+    }
+    //upload foto ktp
+    $upload_image1 = $_FILES['userfilektp']['name'];
+    if ($upload_image1) {
+      $config['upload_path']          = './gambar/pegawai/';
+      $config['allowed_types']        = 'gif|jpg|png|PNG';
+      $config['max_size']             = 10000;
+      $config['max_width']            = 10000;
+      $config['max_height']           = 10000;
+      $this->load->library('upload', $config);
+
+      if ($this->upload->do_upload('userfilektp')) {
+        $new_image = $this->upload->data('file_name');
+        $data = $this->db->set('ktp', $new_image);
+      } else {
+        echo $this->upload->display_errors();
+      }
+    }
+
+    // 
+    $data = [
+
+      "nama_pegawai" => $nama_pegawai,
+      "jekel" => $jekel,
+      "pendidikan" => $pendidikan,
+      "status_kepegawaian" => $status_pegawai,
+      "agama" => $agama,
+      "jabatan" => $jabatan,
+      "no_hp" => $nohp,
+      "alamat" => $alamat,
+      "tanggal_masuk" => $tgl_msk
+    ];
+    $this->db->where('id_pegawai', $id_pegawai);
+    $this->db->update('tb_pegawai', $data);
+
+    $data1 = [
+      "name" => $nama_pegawai,
+      "is_active" => $status_pegawai,
+      "image" => $gambar_user,
+    ];
+    $this->db->where('id', $id_user);
+    $this->db->update('user', $data1);
+    $this->session->set_flashdata('flash', 'Berhasil diperbarui');
+    redirect('admin/pegawai');
+  }
+  public function hapus_pegawai($id, $id_user)
+  {
+    $this->db->where('id_pegawai', $id);
+    $this->db->delete('tb_pegawai');
+    $this->db->where('id', $id_user);
+    $this->db->delete('user');
+    $this->session->set_flashdata('flash', ' Berhasil Dihapus');
+    redirect('admin/pegawai');
+  }
+
+  public function akun_pegawai()
+  {
+    $data['title'] = 'Data Akun';
+    // mengambil data user berdasarkan email yang ada di session
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    $data['akun'] = $this->Admin_model->getAllDetail();
+
+    $this->load->view('backend/template/header', $data);
+    $this->load->view('backend/template/topbar', $data);
+    $this->load->view('backend/template/sidebar', $data);
+    $this->load->view('backend/admin/akun/index', $data);
+    $this->load->view('backend/template/footer');
+  }
+
+  public function reset_password($id)
+  {
+    $data = [
+      'password' => password_hash('anggota', PASSWORD_DEFAULT),
+    ];
+    $this->db->where('id', $id);
+    $this->db->update('user', $data);
+    $this->session->set_flashdata('flash', 'Berhasil Direset');
+    redirect('admin/akun-pegawai');
+  }
+
+  public function lembur_pegawai()
+  {
+    $data['title'] = 'Lembur Hari Ini';
+    // mengambil data user berdasarkan email yang ada di session
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    $data['pegawai'] = $this->Admin_model->getAllpegawai();
+    $data['lemburbydate'] = $this->Admin_model->getAlllemburByDate();
+
+    $this->load->view('backend/template/header', $data);
+    $this->load->view('backend/template/topbar', $data);
+    $this->load->view('backend/template/sidebar', $data);
+    $this->load->view('backend/admin/lembur/lembur', $data);
+    $this->load->view('backend/template/footer');
+  }
+  public function simpan_lembur_pegawai()
+  {
+    $data['title'] = 'Lembur Hari Ini';
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    $id_pegawai = $this->input->post('id_pegawai', true);
+    $date = $this->input->post('date', true);
+    $time = $this->input->post('time', true);
+    $data = [
+      "id_pegawai" => $id_pegawai,
+      "date" => $date,
+      "waktu_lembur" => $time,
+    ];
+    $this->db->insert('tb_lembur', $data);
+    $this->session->set_flashdata('flash', 'Data Lembur Berhasil ditambah');
+    redirect('admin/tambah-lembur');
+  }
+  public function edit_lembur_pegawai()
+  {
+    $data['title'] = 'Lembur Hari Ini';
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    $id_lembur = $this->input->post('id_lembur', true);
+    $id_pegawai = $this->input->post('id_pegawai', true);
+    $date = $this->input->post('date', true);
+    $time = $this->input->post('time', true);
+    $data = [
+      "id_pegawai" => $id_pegawai,
+      "date" => $date,
+      "waktu_lembur" => $time,
+    ];
+    $this->db->where('id_lembur', $id_lembur);
+    $this->db->update('tb_lembur', $data);
+    $this->session->set_flashdata('flash', 'Data Lembur Berhasil ditambah');
+    redirect('admin/tambah-lembur');
+  }
+  public function hapus_lembur_pegawai($id)
+  {
+    $this->db->where('id_lembur', $id);
+    $this->db->delete('tb_lembur');
+    $this->session->set_flashdata('flash', ' Berhasil Dihapus');
+    redirect('admin/tambah-lembur');
+  }
+
+
+  public function tampil_konfirmasi()
+  {
+    $data['title'] = 'Tampil Konfirmasi';
+    // mengambil data user berdasarkan email yang ada di session
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    $data['konfirmasi'] = $this->Admin_model->getAllKonfirmasiByDate();
+    // var_dump($data['konfirmasi']);
+    // die;
+
+    $this->load->view('backend/template/header', $data);
+    $this->load->view('backend/template/topbar', $data);
+    $this->load->view('backend/template/sidebar', $data);
+    $this->load->view('backend/admin/konfirmasi/index', $data);
+    $this->load->view('backend/template/footer');
+  }
+
+  public function konfirmasi_absen($id)
+  {
+    $data['title'] = 'Lembur Hari Ini';
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    $data = [
+      "status" => 1,
+    ];
+    $this->db->where('id_presents', $id);
+    $this->db->update('tb_presents', $data);
+    $this->session->set_flashdata('flash', 'Absen Masuk Berhasil Dikonfirmasi');
+    redirect('admin/tampil-konfirmasi');
+  }
+
+  public function konfirmasi_absen_pulang($id)
+  {
+    $data['title'] = 'Lembur Hari Ini';
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    $data = [
+      "status" => 2,
+    ];
+    $this->db->where('id_presents', $id);
+    $this->db->update('tb_presents', $data);
+    $this->session->set_flashdata('flash', 'Absen Pulang Berhasil Dikonfirmasi');
+    redirect('admin/tampil-konfirmasi');
+  }
+
+  public function konfirmasi_absen_lembur($id, $id_peg)
+  {
+    $data['title'] = 'Lembur Hari Ini';
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    $lembur = $this->Admin_model->getPegawaiByLemburTanggal($id_peg);
+    $id_lembur = $lembur['id_lembur'];
+    // var_dump($id_lembur);
+    // die;
+    $data = [
+      "status" => 3,
+      "id_lembur" => $id_lembur,
+    ];
+    $this->db->where('id_presents', $id);
+    $this->db->update('tb_presents', $data);
+    $this->Admin_model->InsertTbLembur($id_peg);
+    $this->session->set_flashdata('flash', 'Data Lembur Berhasil Dikonfirmasi');
+    redirect('admin/tampil-konfirmasi');
+  }
+
+  public function konfirmasi_absen_izin_sakit($id)
+  {
+
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
+    $data = [
+      "status" => 4,
+    ];
+    $this->db->where('id_presents', $id);
+    $this->db->update('tb_presents', $data);
+
+    $this->session->set_flashdata('flash', 'Data Lembur Berhasil Dikonfirmasi');
+    redirect('admin/tampil-konfirmasi');
+  }
+  public function konfirmasi_absen_izin_tdkmsk($id)
+  {
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    $data = [
+      "status" => 5,
+    ];
+    $this->db->where('id_presents', $id);
+    $this->db->update('tb_presents', $data);
+    $this->session->set_flashdata('flash', 'Data Lembur Berhasil Dikonfirmasi');
+    redirect('admin/tampil-konfirmasi');
+  }
+
+  //data absen
+  public function absen_bulanan()
+  {
+    $data['title'] = 'Absen Bulanan';
+    // mengambil data user berdasarkan email yang ada di session
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    $thn = $this->input->post('th');
+    $bln = $this->input->post('bln');
+    $data['blnselected'] = $bln;
+    $data['thnselected'] = $thn;
+    $id_peg = $this->input->post('id_peg');
+    // $data['petugas'] = $this->db->get_where('user')->result_array();
+    // 
+    $data['list_th'] = $this->Admin_model->getTahun();
+    $data['list_bln'] = $this->Admin_model->getBln();
+    $data['pegawai'] = $this->Admin_model->getAllpegawai();
+    $isi = $this->Admin_model->getAllpegawaiByid($id_peg);
+    if ($isi == null) {
+      $data['detail_pegawai']['nama_pegawai'] = '';
+      $data['detail_pegawai']['namjab'] = '';
+    } else {
+      $data['detail_pegawai'] = $isi;
+    }
+
+
+    if ($bln < 10) {
+      $thnpilihan1 = $thn . '-' . '0' . $bln . '-' . '01';
+      $thnpilihan2 = $thn . '-' . '0' . $bln . '-' . '31';
+    } else {
+      $thnpilihan1 = $thn . '-' . $bln . '-' . '01';
+      $thnpilihan2 = $thn . '-' . $bln . '-' . '31';
+    }
+    // 
+    $data['absen'] = $this->Admin_model->getAllAbsen($thnpilihan1, $thnpilihan2, $id_peg);
+
+    $data['blnnya'] = $bln;
+    $data['thn'] = $thn;
+
+
+    $this->load->view('backend/template/header', $data);
+    $this->load->view('backend/template/topbar', $data);
+    $this->load->view('backend/template/sidebar', $data);
+    $this->load->view('backend/admin/absenbulanan/index', $data);
+    $this->load->view('backend/template/footer');
+  }
+
+  public function cetak_absen_bulanan($thn, $bln, $idpeg)
+  {
+
+    $data['blnselected'] = $bln;
+    $data['thnselected'] = $thn;
+
+    if ($bln < 10) {
+      $thnpilihan1 = $thn . '-' . '0' . $bln . '-' . '01';
+      $thnpilihan2 = $thn . '-' . '0' . $bln . '-' . '31';
+    } else {
+      $thnpilihan1 = $thn . '-' . $bln . '-' . '01';
+      $thnpilihan2 = $thn . '-' . $bln . '-' . '31';
+    }
+    // 
+    $data['detail_pegawai'] = $this->Admin_model->getAllpegawaiByid($idpeg);
+    $data['absen'] = $this->Admin_model->getAllAbsen($thnpilihan1, $thnpilihan2, $idpeg);
+
+    $data['blnnya'] = $bln;
+    $data['thn'] = $thn;
+    // $this->load->view('backend/template/header', $data);
+    $this->load->view('backend/admin/absenbulanan/cetak', $data);
+  }
+
+  public function detail_absen($id)
+  {
+    $data['title'] = 'Detail Absensi';
+    // mengambil data user berdasarkan email yang ada di session
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    $data['detail_absensi'] = $this->Admin_model->getDetailAbsen($id);
+
+    $this->load->view('backend/template/header', $data);
+    $this->load->view('backend/template/topbar', $data);
+    $this->load->view('backend/template/sidebar', $data);
+    $this->load->view('backend/admin/absenbulanan/detail', $data);
+    $this->load->view('backend/template/footer');
+  }
+
+
+
+  public function lembur_bulanan()
+  {
+    $data['title'] = 'Lembur Bulanan';
+    // mengambil data user berdasarkan email yang ada di session
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    $thn = $this->input->post('th');
+    $bln = $this->input->post('bln');
+    $data['blnselected'] = $bln;
+    $data['thnselected'] = $thn;
+
+    // $data['petugas'] = $this->db->get_where('user')->result_array();
+    // 
+    $data['list_th'] = $this->Admin_model->getTahun();
+    $data['list_bln'] = $this->Admin_model->getBln();
+
+    if ($bln < 10) {
+      $thnpilihan1 = $thn . '-' . '0' . $bln . '-' . '01';
+      $thnpilihan2 = $thn . '-' . '0' . $bln . '-' . '31';
+    } else {
+      $thnpilihan1 = $thn . '-' . $bln . '-' . '01';
+      $thnpilihan2 = $thn . '-' . $bln . '-' . '31';
+    }
+    // 
+    // var_dump($thnpilihan1);
+    // die;
+    $data['absen'] = $this->Admin_model->getAllLemburPegawai($thnpilihan1, $thnpilihan2);
+    // var_dump($data['absen']);
+    // die;
+
+    $data['blnnya'] = $bln;
+    $data['thn'] = $thn;
+
+
+    $this->load->view('backend/template/header', $data);
+    $this->load->view('backend/template/topbar', $data);
+    $this->load->view('backend/template/sidebar', $data);
+    $this->load->view('backend/admin/lemburbulanan/index', $data);
+    $this->load->view('backend/template/footer');
+  }
+  public function cetak_absen_lembur($thn, $bln)
+  {
+    $data['title'] = 'Lembur Bulanan';
+    // mengambil data user berdasarkan email yang ada di session
+
+    $data['blnselected'] = $bln;
+    $data['thnselected'] = $thn;
+
+    // $data['petugas'] = $this->db->get_where('user')->result_array();
+    // 
+
+
+    if ($bln < 10) {
+      $thnpilihan1 = $thn . '-' . '0' . $bln . '-' . '01';
+      $thnpilihan2 = $thn . '-' . '0' . $bln . '-' . '31';
+    } else {
+      $thnpilihan1 = $thn . '-' . $bln . '-' . '01';
+      $thnpilihan2 = $thn . '-' . $bln . '-' . '31';
+    }
+    // 
+    $data['absen'] = $this->Admin_model->getAllLemburPegawai($thnpilihan1, $thnpilihan2);
+    // var_dump($data['absen']);
+    // die;
+
+    $data['blnnya'] = $bln;
+    $data['thn'] = $thn;
+    $this->load->view('backend/admin/lemburbulanan/cetak', $data);
+  }
+
+  public function tpp_bulanan()
+  {
+    $data['title'] = 'Payrol Bulanan';
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    $thn = $this->input->post('th');
+    $bln = $this->input->post('bln');
+    $data['blnselected'] = $bln;
+    $data['thnselected'] = $thn;
+    $data['pegawai'] = $this->Admin_model->getAllpegawai();
+
+
+    $data['list_th'] = $this->Admin_model->getTahun();
+    $data['list_bln'] = $this->Admin_model->getBln();
+    if ($bln < 10) {
+      $thnpilihan1 = $thn . '-' . '0' . $bln . '-' . '01';
+      $thnpilihan2 = $thn . '-' . '0' . $bln . '-' . '31';
+    } else {
+      $thnpilihan1 = $thn . '-' . $bln . '-' . '01';
+      $thnpilihan2 = $thn . '-' . $bln . '-' . '31';
+    }
+    // 
+    $data['gaji'] = $this->Admin_model->getAllGajiByDate($thnpilihan1, $thnpilihan2);
+    $data['blnnya'] = $bln;
+    $data['thn'] = $thn;
+
+    $this->load->view('backend/template/header', $data);
+    $this->load->view('backend/template/topbar', $data);
+    $this->load->view('backend/template/sidebar', $data);
+    $this->load->view('backend/admin/tpp_bulanan/index', $data);
+    $this->load->view('backend/template/footer');
+  }
+  public function akumulasi_gaji()
+  {
+    // $id_pegawai = $_POST['id_pegawai'];
+    // var_dump($id_pegawai);
+    // die;
+    // echo 'success';
+    // echo json_encode(['pesan' => 'berhasil']);
+    // redirect('admin/tpp-bulanana');
+
+    if ($_POST['id_pegawai'] != '' && $_POST['tahun_cari'] != '' && $_POST['bulan_cari'] != '') {
+
+      $id_pegawai = $_POST['id_pegawai'];
+      $thn = $_POST['tahun_cari'];
+      $bln = $_POST['bulan_cari'];
+      if ($bln < 10) {
+        $thnpilihan1 = $thn . '-' . '0' . $bln . '-' . '01';
+        $thnpilihan2 = $thn . '-' . '0' . $bln . '-' . '31';
+      } else {
+        $thnpilihan1 = $thn . '-' . $bln . '-' . '01';
+        $thnpilihan2 = $thn . '-' . $bln . '-' . '31';
+      }
+
+      // jabatan
+      $this->db->select('jabatan.*');
+      $this->db->from('tb_pegawai');
+      $this->db->join('jabatan', 'tb_pegawai.jabatan = jabatan.id_jabatan');
+      $this->db->where('tb_pegawai.id_pegawai', $id_pegawai);
+      $jabatan = $this->db->get()->row();
+      // 
+
+      // hitung jumglah masuk
+      $this->db->where('id_pegawai', $id_pegawai);
+      $this->db->where('keterangan', 2);
+      $this->db->where('tanggal >=', $thnpilihan1);
+      $this->db->where('tanggal <=', $thnpilihan2);
+      $this->db->from('tb_presents');
+      $total_msk = $this->db->count_all_results();
+
+      // 
+      // hitung jumglah lembur
+      $this->db->where('id_pegawai', $id_pegawai);
+      $this->db->where('keterangan', 3);
+      $this->db->where('tanggal >=', $thnpilihan1);
+      $this->db->where('tanggal <=', $thnpilihan2);
+      $this->db->from('tb_presents');
+      $total_lembur = $this->db->count_all_results();
+      // 
+
+      $total_msk_lembur = $jabatan->salary * $total_lembur;
+
+      $total_gaji_masuk = $total_msk_lembur + ($total_msk * $jabatan->salary);
+      $total_gaji_lembur = $total_lembur * $jabatan->overtime;
+      if ($total_gaji_masuk !== 0) {
+        $simpan = true;
+      } else {
+        $simpan = false;
+      }
+    }
+
+    if ($simpan == TRUE) {
+
+      echo json_encode(
+        [
+          'flash' => 'Data Ditemukan',
+          'gaji_msk' => $total_gaji_masuk,
+          'gaji_lembur' => $total_gaji_lembur,
+        ]
+      );
+    } else {
+      echo json_encode([
+        'flash' => 'Gaji Bulan Ini Kosong',
+
+      ]);
+    }
+  }
+  public function simpan_gaji()
+  {
+
+    $id_pegawai = $this->input->post('id_pegawai', true);
+    $thn = $this->input->post('th1', true);
+    $bln = $this->input->post('bln1', true);
+    $gapok = $this->input->post('gapok', true);
+    $lembur = $this->input->post('lembur', true);
+    $bonus = $this->input->post('bonus', true);
+    $keterangan = $this->input->post('keterangan', true);
+
+    if ($bln < 10) {
+      $thnpilihan1 = $thn . '-' . '0' . $bln . '-' . '01';
+      $thnpilihan2 = $thn . '-' . '0' . $bln . '-' . '31';
+    } else {
+      $thnpilihan1 = $thn . '-' . $bln . '-' . '01';
+      $thnpilihan2 = $thn . '-' . $bln . '-' . '31';
+    }
+
+    $gaji = $this->Admin_model->getAllGajiByDateID($thnpilihan1, $thnpilihan2, $id_pegawai);
+    if ($gaji != null) {
+      $this->session->set_flashdata('flash', 'Data Gaji Pegawai Pada Bulan Ini Sudah Ditambahkan');
+      redirect('admin/tpp-bulanan');
+    } else {
+
+      if ($bonus == null) {
+        $bonus = 0;
+      }
+      $gaji_bersih = $gapok + $lembur + $bonus;
+      if ($bln < 10) {
+        $periode = $thn . '-' . '0' . $bln . '-' . '31';
+      } else {
+        $periode = $thn . '-' . $bln . '-' . '31';
+      }
+      date_default_timezone_set('Asia/Jakarta');
+      $tanggal_upload = date('Y-m-d');
+
+      $pegawai = $this->Admin_model->getDetailpegawai($id_pegawai);
+
+      $data = [
+        "id_pegawai" => $id_pegawai,
+        "periode" => $periode,
+        "tanggal" => $tanggal_upload,
+        "id_jabatan" => $pegawai['jabatan'],
+        "gaji_pokok" => $gapok,
+        "gaji_lembur" => $lembur,
+        "bonus" => $bonus,
+        "keterangan" => $keterangan,
+        "gaji_bersih" => $gaji_bersih,
+      ];
+      $this->db->insert('tb_payrol', $data);
+      $this->session->set_flashdata('flash', 'Data Payrol Pegawai Berhasil Ditambah');
+
+      redirect('admin/tpp-bulanan', $data);
+    }
+  }
+
+
+  public function edit_gaji()
+  {
+
+    $bonus = $this->input->post('bonus', true);
+    $keterangan = $this->input->post('keterangan', true);
+    $id_payrol = $this->input->post('id_payrol', true);
+    $gaber = $this->input->post('gaber', true);
+
+    $gaji_bersih = $gaber + $bonus;
+
+    $data = [
+      "bonus" => $bonus,
+      "keterangan" => $keterangan,
+      "gaji_bersih" => $gaji_bersih,
+    ];
+    $this->db->where('id_payrol', $id_payrol);
+    $this->db->update('tb_payrol', $data);
+    $this->session->set_flashdata('flash', 'Data Payrol Pegawai Berhasil Diperbarui');
+    redirect('admin/tpp-bulanan', $data);
+  }
+
+  public function hapus_gaji($id)
+  {
+    $this->db->where('id_payrol', $id);
+    $this->db->delete('tb_payrol');
+    $this->session->set_flashdata('flash', ' Berhasil Dihapus');
+    redirect('admin/tpp-bulanan');
+  }
+
+  public function laporan_tpp_bulanan()
+  {
+    $data['title'] = 'Cetak Payrol Bulanan';
+
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+    $thn = $this->input->post('th');
+    $bln = $this->input->post('bln');
+    $data['blnselected'] = $bln;
+    $data['thnselected'] = $thn;
+    $data['pegawai'] = $this->Admin_model->getAllpegawai();
+
+
+    $data['list_th'] = $this->Admin_model->getTahun();
+    $data['list_bln'] = $this->Admin_model->getBln();
+
+    if ($bln < 10) {
+      $thnpilihan1 = $thn . '-' . '0' . $bln . '-' . '01';
+      $thnpilihan2 = $thn . '-' . '0' . $bln . '-' . '31';
+    } else {
+      $thnpilihan1 = $thn . '-' . $bln . '-' . '01';
+      $thnpilihan2 = $thn . '-' . $bln . '-' . '31';
+    }
+    // 
+    $data['gaji'] = $this->Admin_model->getAllGajiByDate($thnpilihan1, $thnpilihan2);
+    $data['blnnya'] = $bln;
+    $data['thn'] = $thn;
+
+    $this->load->view('backend/template/header', $data);
+    $this->load->view('backend/template/topbar', $data);
+    $this->load->view('backend/template/sidebar', $data);
+    $this->load->view('backend/admin/laporan/laporan_tpp', $data);
+    $this->load->view('backend/template/footer');
+  }
+
+  public function detail_laporan_tpp_bulanan($id_pegawai, $bln, $thn)
+  {
+    $data['title'] = 'detail Laporan Payrol Bulanan';
+
+    $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
+    $data['pegawai'] = $this->Admin_model->getAllpegawai();
+    $data['blnselected'] = $bln;
+    $data['thnselected'] = $thn;
+    $data['id_pegawai'] = $id_pegawai;
+
+    if ($bln < 10) {
+      $thnpilihan1 = $thn . '-' . '0' . $bln . '-' . '01';
+      $thnpilihan2 = $thn . '-' . '0' . $bln . '-' . '31';
+    } else {
+      $thnpilihan1 = $thn . '-' . $bln . '-' . '01';
+      $thnpilihan2 = $thn . '-' . $bln . '-' . '31';
+    }
+
+
+    // var_dump($thnpilihan2);
+    // die;
+    // 
+    $data['gaji'] = $this->Admin_model->getAllGajiByDateID($thnpilihan1, $thnpilihan2, $id_pegawai);
+    $data['absen'] = $this->Admin_model->getAllLemburPegawaiById($thnpilihan1, $thnpilihan2, $id_pegawai);
+    // var_dump($data['gaji']);
+    // die;
+
+
+    $this->load->view('backend/template/header', $data);
+    $this->load->view('backend/template/topbar', $data);
+    $this->load->view('backend/template/sidebar', $data);
+    $this->load->view('backend/admin/laporan/detail_laporan_tpp', $data);
+    $this->load->view('backend/template/footer');
+  }
+  public function cetak_payrol_pegawai($id_pegawai, $bln, $thn)
+  {
+    $data['title'] = 'Lembur Bulanan';
+    // mengambil data user berdasarkan email yang ada di session
+
+    $data['blnselected'] = $bln;
+    $data['thnselected'] = $thn;
+
+    // $data['petugas'] = $this->db->get_where('user')->result_array();
+    // 
+
+
+    if ($bln < 10) {
+      $thnpilihan1 = $thn . '-' . '0' . $bln . '-' . '01';
+      $thnpilihan2 = $thn . '-' . '0' . $bln . '-' . '31';
+    } else {
+      $thnpilihan1 = $thn . '-' . $bln . '-' . '01';
+      $thnpilihan2 = $thn . '-' . $bln . '-' . '31';
+    }
+    // 
+    $data['gaji'] = $this->Admin_model->getAllGajiByDateID($thnpilihan1, $thnpilihan2, $id_pegawai);
+    $data['absen'] = $this->Admin_model->getAllLemburPegawaiById($thnpilihan1, $thnpilihan2, $id_pegawai);
+    // var_dump($data['absen']);
+    // die;
+
+    $data['blnnya'] = $bln;
+    $data['thn'] = $thn;
+    $this->load->view('backend/admin/laporan/cetak', $data);
+  }
 }

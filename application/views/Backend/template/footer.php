@@ -1,12 +1,12 @@
 <!--Footer-->
 <div class="row mt-5 mb-4 footer">
-    <div class="col-sm-8">
-        <span>&copy; All rights reserved 2021 designed by <a class="text-theme" href="#">A-maik</a></span>
-    </div>
-    <div class="col-sm-4 text-right">
-        <a href="#" class="ml-2">Contact Us</a>
-        <a href="#" class="ml-2">Support</a>
-    </div>
+  <div class="col-sm-8">
+    <span>&copy; PT. Mandiri Rajawali Hutama <a class="text-theme" href="#"></a></span>
+  </div>
+  <div class="col-sm-4 text-right">
+    <a href="#" class="ml-2">Contact Us</a>
+    <a href="#" class="ml-2">Support</a>
+  </div>
 </div>
 <!--Footer-->
 
@@ -59,18 +59,18 @@
 <script src="<?= base_url() ?>/assets/js/dataTables.bootstrap4.min.js"></script>
 <!--  -->
 <script>
-    //Nice select
-    $('.bulk-actions').niceSelect();
+  //Nice select
+  $('.bulk-actions').niceSelect();
 </script>
 
 <script>
-    $('#example').DataTable();
+  $('#example').DataTable();
 </script>
 <script>
-    $('.custom-file-input').on('change', function() {
-        let fileName = $(this).val().split('\\').pop();
-        $(this).next('.custom-file-label').addClass("selected").html(fileName);
-    })
+  $('.custom-file-input').on('change', function() {
+    let fileName = $(this).val().split('\\').pop();
+    $(this).next('.custom-file-label').addClass("selected").html(fileName);
+  })
 </script>
 </body>
 
